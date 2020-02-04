@@ -138,15 +138,15 @@ class PlayJsonExtensionsTest extends FunSuite {
     )
   }
 
-  test("require to JsError for inline format"){
-    case class Bar(a: Int){
-      require(a > 5, "a needs to be larger than 5")
+  test( "require to JsError for inline format" ) {
+    case class Bar( a: Int ) {
+      require( a > 5, "a needs to be larger than 5" )
     }
-    case class Baz(bar: Bar)
+    case class Baz( bar: Bar )
     implicit def fmt1 = Jsonx.formatInline[Bar]
     implicit def fmt2 = Jsonx.formatCaseClass[Baz]
-    assert(Baz(Bar(6)) === Json.parse("""{"bar":6}""").validate[Baz].get)
-    val capturedFailedRequire = Json.parse("""{"bar":5}""").validate[Baz]
+    assert( Baz( Bar( 6 ) ) === Json.parse( """{"bar":6}""" ).validate[Baz].get )
+    val capturedFailedRequire = Json.parse( """{"bar":5}""" ).validate[Baz]
     assert(
       capturedFailedRequire.asInstanceOf[JsError].errors.head._2.head.message contains "requirement failed: a needs to be larger than 5"
     )
